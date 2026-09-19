@@ -27,7 +27,7 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\driveB\3dparty\glad.c">
+    <ClCompile Include="..\libraries\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
