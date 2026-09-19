@@ -157,6 +157,7 @@
     <ClInclude Include="model_loading.hpp" />
     <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="Shader.hpp" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
