@@ -8,6 +8,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <spdlog/spdlog.h>
+#include <filesystem>
 
 struct Vertex {
 	glm::vec3 position;
@@ -21,13 +22,12 @@ struct Texture {
 	std::string path;
 };
 
-int TextureFromFile(const char* location, const char* directory) {
+int TextureFromFile(std::filesystem::path path) {
 	unsigned int ID;
 	glGenTextures(1, &ID);
 	glBindTexture(GL_TEXTURE_2D, ID);
 	int width, hight, nrchannels;
-	std::string path = std::string(directory) + std::string("/") + location;
-	unsigned char* data = stbi_load(path.c_str(), &width, &hight, &nrchannels, NULL);
+	unsigned char* data = stbi_load(path.string().c_str(), &width, &hight, &nrchannels, NULL);
 	if (data) {
 		GLenum format;
 		switch (nrchannels) {
@@ -41,9 +41,9 @@ int TextureFromFile(const char* location, const char* directory) {
 		//glBindTexture(GL_TEXTURE_2D, ID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, hight, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		spdlog::info("ASSIMP::STBI::Loaded Texture: " + path);
+		spdlog::info("ASSIMP::STBI::Loaded Texture: " + path.string());
 	}
-	else spdlog::error("ASSIMP::STBI::Failed to load texture in : " + path );
+	else spdlog::error("ASSIMP::STBI::Failed to load texture in : " + path.string() );
 	stbi_image_free(data);
 	return ID;
 }
@@ -113,9 +113,8 @@ private:
 
 class Model {
 public:
-	Model(const char* path) {
+	Model(std::filesystem::path path) {
 		loadModel(path);
-		spdlog::info("ASSIMP::Model Loaded");
 	}
 
 	void Draw(Shader& shader) {
@@ -124,19 +123,17 @@ public:
 	}
 private:
 	std::vector<Mesh> meshes;
-	std::string directory;
 
-	void loadModel(std::string path) {
+	void loadModel(std::filesystem::path path) {
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* scene = importer.ReadFile(path.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-			spdlog::info(std::string("ASSIMP::")+ importer.GetErrorString());
+			spdlog::error(std::string("ASSIMP::")+ importer.GetErrorString());
 			return;
 		}
 		
-	directory = path.substr(0, path.find_last_of('/'));
-	processNode(scene->mRootNode, scene);	
+		processNode(scene->mRootNode, scene);	
 	}
 	
 	void processNode(aiNode* node, const aiScene* scene){
@@ -155,7 +152,7 @@ private:
 		std::vector<Texture> textures;
 
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-			Vertex vertex;
+			Vertex vertex{};
 			vertex.position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 			vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 			if (mesh->mTextureCoords[0])
@@ -187,13 +184,14 @@ private:
 		{
 			aiString str;
 			mat->GetTexture(type, i, &str);
+			std::filesystem::path texture_path = "assets/textures";
+			texture_path = texture_path / str.C_Str();
 			Texture texture;
-			texture.id = TextureFromFile(str.C_Str(), directory.c_str());
+			texture.id = TextureFromFile(texture_path);
 			texture.type = typeName;
-			texture.path = str.C_Str();
+			texture.path = texture_path.string();
 			textures.push_back(texture);
 		}
 		return textures;
 	}
-
 };

@@ -7,13 +7,15 @@
 #include<glad/glad.h>
 #include<glm/glm.hpp>
 #include<glm/gtc/type_ptr.hpp>
+#include<filesystem>
+#include<spdlog/spdlog.h>
 
 class Shader
 {
 public:
 	unsigned int ID;
 
-	Shader(const char* vertex_path, const char* fragment_path);
+	Shader(std::filesystem::path vertex_path, std::filesystem::path fragment_path);
 
 	void use();
 
