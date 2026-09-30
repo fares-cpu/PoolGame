@@ -1,21 +1,54 @@
+
+#include"FPScamera.hpp"
+#include<filesystem>
 #include<spdlog/spdlog.h>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
+#include"Shader.hpp"
+#include"model_loading.hpp"
+
+
+
 
 GLFWwindow* init_glfw();
 void framebuffer_size_callback(GLFWwindow* window, int width, int hight);
 
+
+
+
 int main() {
 	GLFWwindow* window = init_glfw();
+	Camera* camera = new FPSCamera();
+	Model* modelAsset = new Model("assets/models/table.obj");
+	glm::mat4 modelMat(1.0f);
+	Shader shaderTable("shaders/vertex.glsl", "shaders/tablefragment.glsl");
+
+	shaderTable.use();
+	shaderTable.set_vec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+	shaderTable.set_vec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+	shaderTable.set_vec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+	shaderTable.set_vec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+
 	while (!glfwWindowShouldClose(window)) {
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		//glfwSwapBuffers(window);
+		shaderTable.set_mat4("model", modelMat);
+		shaderTable.set_mat4("view", camera->GetViewMatrix());
+		shaderTable.set_mat4("projection", camera->perspective());
+		shaderTable.set_vec3("viewPos", camera->getPosition());
+
+		modelAsset->Draw(shaderTable);
+
+		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	glfwTerminate();
+	delete camera;
+	delete modelAsset;
 	return 0;
 }
+
+
 
 GLFWwindow* init_glfw() {
 	glfwInit();

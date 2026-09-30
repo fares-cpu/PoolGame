@@ -1,6 +1,5 @@
 #include<glad/glad.h>
 #include"Shader.hpp"
-#include"stb_image.h"
 #include<vector>
 #include <string>
 #include <glm/glm.hpp> 
@@ -9,6 +8,8 @@
 #include <assimp/postprocess.h>
 #include <spdlog/spdlog.h>
 #include <filesystem>
+#define STB_IMAGE_IMPLEMENTATION
+#include"stb_image.h"
 
 struct Vertex {
 	glm::vec3 position;
@@ -70,7 +71,7 @@ public:
 			
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
-			else if (name == "texture.specular")
+			else if (name == "texture_specular")
 				number = std::to_string(specularNr++);
 
 			shader.set_int(("material." + name + number).c_str(), i);

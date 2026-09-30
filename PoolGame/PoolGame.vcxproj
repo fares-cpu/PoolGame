@@ -120,13 +120,14 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)libraries\lib\glfw3.lib;$(SolutionDir)libraries\lib\spdlogd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)libraries\lib\glfw3.lib;$(SolutionDir)libraries\lib\spdlogd.lib;$(SolutionDir)libraries\lib\assimp-vc145-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)assets" "$(TargetDir)assets" /E /I /Y</Command>
+      <Command>xcopy "$(SolutionDir)assets" "$(TargetDir)assets" /E /I /Y
+xcopy "$(ProjectDir)shaders" "$(TargetDir)shaders" /E /I /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,7 +148,8 @@
       <EnableSegmentHeap>true</EnableSegmentHeap>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)assets" "$(TargetDir)assets" /E /I /Y</Command>
+      <Command>xcopy "$(SolutionDir)assets" "$(TargetDir)assets" /E /I /Y
+xcopy "$(ProjectDir)shaders" "$(TargetDir)shaders" /E /I /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -164,6 +166,10 @@
     <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\tablefragment.glsl" />
+    <None Include="Shaders\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

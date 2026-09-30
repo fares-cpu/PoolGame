@@ -2,7 +2,7 @@
 
 
 FPSCamera::FPSCamera() {
-	m_eye = glm::vec3(0.0f, 0.0f, 3.0f);
+	m_eye = glm::vec3(0.0f, 0.0f, 10.0f);
 	m_target = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
