@@ -155,6 +155,7 @@ xcopy "$(ProjectDir)shaders" "$(TargetDir)shaders" /E /I /Y</Command>
   <ItemGroup>
     <ClCompile Include="..\libraries\glad.c" />
     <ClCompile Include="FPScamera.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="orbitCamera.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -162,6 +163,7 @@ xcopy "$(ProjectDir)shaders" "$(TargetDir)shaders" /E /I /Y</Command>
   <ItemGroup>
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="FPScamera.hpp" />
+    <ClInclude Include="input.hpp" />
     <ClInclude Include="model_loading.hpp" />
     <ClInclude Include="OrbitCamera.hpp" />
     <ClInclude Include="Shader.hpp" />

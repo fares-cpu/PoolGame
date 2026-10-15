@@ -6,6 +6,7 @@
 #include<GLFW/glfw3.h>
 #include"Shader.hpp"
 #include"model_loading.hpp"
+#include"input.hpp"
 
 
 
@@ -17,8 +18,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int hight);
 
 
 int main() {
-	GLFWwindow* window = init_glfw();
 	Camera* camera = new FPSCamera();
+	GLFWwindow* window = init_glfw();
+	
 	Model* modelAsset = new Model("assets/models/table.obj");
 	glm::mat4 modelMat(1.0f);
 	Shader shaderTable("shaders/vertex.glsl", "shaders/tablefragment.glsl");
@@ -28,7 +30,7 @@ int main() {
 	shaderTable.set_vec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
 	shaderTable.set_vec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
 	shaderTable.set_vec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-
+	 
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -70,6 +72,7 @@ GLFWwindow* init_glfw() {
 	}spdlog::info("GLAD::Loaded glad successfully");
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, cursor_position_callback);
 
 	return window;
 }
